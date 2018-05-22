@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class ParseTest {
 
     @Test
-    public void givenBeanWithJsonProperties_whenParseItToJsonFormat_thenCoorect()
+    public void parsingBeanToJSON()
             throws JsonProcessingException {
         Bean bean = new Bean(1, "Name of json file", "Description of json file");
         String json = new ObjectMapper()
@@ -19,7 +19,7 @@ public class ParseTest {
     }
 
     @Test
-    public void givenJsonString_whenParseStringToBean_thenCorrect()
+    public void parsingJSONToBean()
             throws IOException {
         String json = "{\"id\":1,\"name\":\"Name of json file\",\"desc\":\"Description of json file\"}";
 
