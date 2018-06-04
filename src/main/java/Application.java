@@ -5,15 +5,17 @@ import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.TransportAddress;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class Application {
 
     public static void main(String[] args) {
-        create(1, "Name test", "Description test");
+        update();
     }
 
     private static TransportClient client() {
@@ -44,6 +46,24 @@ public class Application {
             esClient.createRecord("elastic", "test", json);
         } catch (JsonProcessingException e) {
             Logger.getLogger(Application.class.getName()).log(Level.SEVERE,     null, e);
+        } finally {
+            esClient.getClient().close();
+        }
+    }
+
+    public static void update() {
+        ESClient esClient = new ESClient();
+
+        try {
+            esClient.setClient(client());
+
+            esClient.updateRecord("elastic", "test", "B38qqGMBStWNZwkcY5gE", "New description string");
+        } catch (InterruptedException e) {
+            Logger.getLogger(Application.class.getName()).log(Level.SEVERE,     null, e);
+        } catch (ExecutionException e) {
+            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, e);
+        } catch (IOException e) {
+            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             esClient.getClient().close();
         }
