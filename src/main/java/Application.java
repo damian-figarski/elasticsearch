@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class Application {
 
     public static void main(String[] args) {
-        update();
+        delete();
     }
 
     private static TransportClient client() {
@@ -69,5 +69,11 @@ public class Application {
         }
     }
 
+    public static void delete() {
+        ESClient esClient = new ESClient();
+        esClient.setClient(client());
+        esClient.deleteRecord("elastic", "test", "_rbUEmMBMMaFSBrui0fI");
+        esClient.getClient().close();
+    }
 
 }

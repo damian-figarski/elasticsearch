@@ -49,5 +49,9 @@ public final class ESClient {
             client.update(updateRequest).get();
     }
 
+    public void deleteRecord(String index, String type, String id) {
+        if (client != null)
+            client.prepareDelete(index, type, id).get();
+    }
 
 }
