@@ -8,6 +8,7 @@ import org.elasticsearch.transport.client.PreBuiltTransportClient;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,7 +16,26 @@ import java.util.logging.Logger;
 public class Application {
 
     public static void main(String[] args) {
-        delete();
+        create(1, "Name of first record", "Description of first record");
+        create(2, "Name of second record", "Description of second record");
+        create(3, "Name of third record", "Description of thrid record");
+
+        System.out.println("Searching by \"first\", should return only one record");
+        List<Bean> list = search("first");
+
+        for (Bean b : list) {
+            System.out.println("ID: " + b.getId() + ", NAME: " + b.getName() + ", DESC: " + b.getDesc());
+        }
+
+        System.out.println();
+        System.out.println("Searching by \"Name\", should return three records");
+
+        list = search("Name");
+
+        for (Bean b : list) {
+            System.out.println("ID: " + b.getId() + ", NAME: " + b.getName() + ", DESC: " + b.getDesc());
+        }
+        
     }
 
     private static TransportClient client() {
@@ -75,5 +95,24 @@ public class Application {
         esClient.deleteRecord("elastic", "test", "_rbUEmMBMMaFSBrui0fI");
         esClient.getClient().close();
     }
+
+    public static List<Bean> search(String searchQuery) {
+        ESClient esClient = new ESClient();
+
+        List<Bean> list = null;
+
+        try {
+            esClient.setClient(client());
+            list = esClient.search(searchQuery);
+        } catch (IOException e) {
+            Logger.getLogger(Application.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            esClient.getClient().close();
+        }
+
+        return list;
+    }
+
+
 
 }
